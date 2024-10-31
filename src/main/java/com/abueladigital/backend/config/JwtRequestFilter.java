@@ -28,13 +28,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         // Excluir login de la validación del token
         Map<String, String> ignoredRequests = Map.of(
-                "/api/auth/login", "GET",
-                "/api/recipes", "GET");
+                "/api/auth/login", "GET", // login
+                "/api/recipes", "GET" // listar recetas
+        );
 
         String path = request.getRequestURI();
         String method = request.getMethod();
 
-        return ignoredRequests.containsKey(path) && ignoredRequests.get(path).equals(method);
+        return ignoredRequests.containsKey(path) && ignoredRequests.get(path).equalsIgnoreCase(method);
     }
 
     @Autowired
