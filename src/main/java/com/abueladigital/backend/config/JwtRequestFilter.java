@@ -3,6 +3,7 @@ package com.abueladigital.backend.config;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,12 +27,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         // Excluir login de la validación del token
-        List<String> ignoredPaths = List.of(
-                "/api/auth/login",
-                "/api/recipes");
+        Map<String, String> ignoredRequests = Map.of(
+                "/api/auth/login", "GET",
+                "/api/recipes", "GET");
 
         String path = request.getRequestURI();
-        return ignoredPaths.contains(path);
+        String method = request.getMethod();
+
+        return ignoredRequests.containsKey(path) && ignoredRequests.get(path).equals(method);
     }
 
     @Autowired
