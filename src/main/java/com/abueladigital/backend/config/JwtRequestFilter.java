@@ -21,14 +21,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-@SuppressWarnings("null")
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         // Excluir login de la validación del token
         Map<String, String> ignoredRequests = Map.of(
-                "/api/auth/login", "GET", // login
+                "/api/auth/login", "POST", // login
                 "/api/recipes", "GET" // listar recetas
         );
 
