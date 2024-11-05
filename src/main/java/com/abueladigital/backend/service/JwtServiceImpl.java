@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 @Service
 public class JwtServiceImpl implements JwtService {
 
+    private final int EXPIRATION_TOKEN_HOURS = 1;
     private final String SECRET_KEY = "Juro solemnemente que mis intenciones no son buenas";
 
     private SecretKey getSigningKey() {
@@ -28,7 +29,7 @@ public class JwtServiceImpl implements JwtService {
                 .claims().empty().add(claims).and()
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas de validez
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * EXPIRATION_TOKEN_HOURS))
                 .signWith(getSigningKey())
                 .compact();
     }

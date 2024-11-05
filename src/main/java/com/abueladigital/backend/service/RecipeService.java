@@ -2,6 +2,7 @@ package com.abueladigital.backend.service;
 
 import com.abueladigital.backend.model.Recipe;
 import java.util.List;
+import java.util.Optional;
 
 public interface RecipeService {
 
@@ -11,10 +12,10 @@ public interface RecipeService {
 
     void delete(Long id);
 
-    Recipe findById(Long id);
+    Optional<Recipe> findById(Long id);
 
     List<Recipe> findAll();
 
     List<Recipe> searchByName(String name);
-    
+
 }

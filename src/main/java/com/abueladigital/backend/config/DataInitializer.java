@@ -53,7 +53,7 @@ public class DataInitializer implements CommandLineRunner {
                 4,
                 "México",
                 2,
-                "/img/tacos.jpg",
+                "tacos.jpg",
                 4.5,
                 user1);
         tacos.addIngredient(new Ingredient("Tortillas de maíz", "8 unidades"));
@@ -70,7 +70,7 @@ public class DataInitializer implements CommandLineRunner {
                 6,
                 "Italia",
                 3,
-                "/img/pizza.jpg",
+                "pizza.jpg",
                 4.8,
                 user1);
 
@@ -89,7 +89,7 @@ public class DataInitializer implements CommandLineRunner {
                 4,
                 "Japón",
                 4,
-                "/img/sushi.jpg",
+                "sushi.jpg",
                 4.7,
                 user2);
 
@@ -107,7 +107,7 @@ public class DataInitializer implements CommandLineRunner {
                 4,
                 "México",
                 3,
-                "/img/enchiladas.jpg",
+                "enchiladas.jpg",
                 4.6,
                 user2);
 
@@ -125,7 +125,7 @@ public class DataInitializer implements CommandLineRunner {
                 6,
                 "España",
                 4,
-                "/img/paella.jpg",
+                "paella.jpg",
                 4.9,
                 user3);
 
@@ -143,7 +143,7 @@ public class DataInitializer implements CommandLineRunner {
                 2,
                 "Japón",
                 4,
-                "/img/ramen.jpg",
+                "ramen.jpg",
                 4.5,
                 user3);
 
