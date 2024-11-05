@@ -1,5 +1,7 @@
 package com.abueladigital.backend.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.abueladigital.backend.service.CustomUserDetailsService;
@@ -75,6 +81,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
+
                 .authorizeHttpRequests((req) -> req
                         // acceso publico
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
@@ -86,7 +95,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/recipes/**").authenticated()
                         // otros
                         .anyRequest().authenticated())
-                .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -102,6 +110,34 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return new CustomUserDetailsService();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowCredentials(true); // Permitir cookies y credenciales
+        config.addAllowedOrigin("http://localhost:8080"); // Reemplaza con el dominio del frontend
+        config.addAllowedHeader("*"); // Permite todos los encabezados
+        config.addAllowedMethod("*"); // Permite todos los métodos (GET, POST, etc.)
+
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
+    
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:8080"); // Reemplaza con el dominio del frontend
+        config.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        
+        return source;
     }
 
 }
