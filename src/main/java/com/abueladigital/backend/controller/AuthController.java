@@ -22,29 +22,24 @@ import lombok.extern.java.Log;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
     private JwtService jwtService;
 
-    // TODO
-    // @Autowired
-    // private UserService userService;
+    @Autowired
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<Object> login(@RequestBody AuthRequest authRequest) {
         try {
             log.info("Autenticar usuario");
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
-            // TODO
-            // Obtener usuario para ver rol
-            // User user = userService.findByEmail(authRequest.getEmail());
-
             // Generar token
-            // TODO: Generar roles diferentes para administradores
             String token = jwtService.generateToken(authentication.getName(), "USER");
 
             return ResponseEntity.ok(new AuthResponse(token));

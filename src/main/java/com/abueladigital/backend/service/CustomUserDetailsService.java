@@ -1,6 +1,5 @@
 package com.abueladigital.backend.service;
 
-
 import lombok.extern.java.Log;
 
 import java.util.Collections;
@@ -18,8 +17,12 @@ import com.abueladigital.backend.repository.UserRepository;
 @Log
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -36,8 +39,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         log.info("Usuario encontrado: " + usuario.getEmail());
 
-        // TODO: Manejar niveles de usuario en el token - agregar "ROLE_ADMIN"
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
-        return new org.springframework.security.core.userdetails.User(usuario.getEmail(), usuario.getPassword(), Collections.singletonList(authority));
+        return new org.springframework.security.core.userdetails.User(usuario.getEmail(), usuario.getPassword(),
+                Collections.singletonList(authority));
     }
 }

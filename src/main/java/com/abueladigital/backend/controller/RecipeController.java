@@ -19,8 +19,12 @@ import java.util.List;
 @RequestMapping("/api/recipes")
 public class RecipeController {
 
-    @Autowired
     private RecipeService recipeService;
+
+    @Autowired
+    public RecipeController(RecipeService recipeService) {
+        this.recipeService = recipeService;
+    }
 
     /**
      * Obtener todas las recetas en una lista.
@@ -91,7 +95,7 @@ public class RecipeController {
 
         if (existingRecipe != null) {
             recipe.setId(id);
-            Recipe updatedRecipe = recipeService.update(recipe);
+            Recipe updatedRecipe = recipeService.save(recipe);
             return ResponseEntity.ok(updatedRecipe);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
