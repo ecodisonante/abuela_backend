@@ -1,7 +1,6 @@
 package com.abueladigital.backend.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -52,21 +51,6 @@ public class Recipe {
     @PrePersist
     protected void onCreate() {
         this.created = LocalDateTime.now();
-    }
-
-    // Constructor
-    public Recipe(String name, String description, Integer servings, String country, Integer dificulty, String imageUrl,
-            Double rate, User user) {
-        this.name = name;
-        this.description = description;
-        this.servings = servings;
-        this.country = country;
-        this.dificulty = dificulty;
-        this.imageUrl = imageUrl;
-        this.rate = rate;
-        this.user = user;
-        this.ingredients = new ArrayList<>();
-        this.instructions = new ArrayList<>();
     }
 
     // Método para agregar un ingrediente
