@@ -21,6 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import com.abueladigital.backend.repository.UserRepository;
 import com.abueladigital.backend.service.CustomUserDetailsService;
 
 /**
@@ -33,8 +34,13 @@ import com.abueladigital.backend.service.CustomUserDetailsService;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
     private JwtRequestFilter jwtRequestFilter;
+
+    @Autowired
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
+
 
     /**
      * Proporciona un administrador de autenticación para manejar el proceso de
@@ -80,19 +86,23 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        String apiRecipes = "/api/recipes";
+        String apiAllModifier = "/**";
+
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
 
-                .authorizeHttpRequests((req) -> req
+                .authorizeHttpRequests(req -> req
                         // acceso publico
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/recipes").permitAll()
+                        .requestMatchers(HttpMethod.GET, apiRecipes).permitAll()
                         // solo registrados
-                        .requestMatchers(HttpMethod.GET, "/api/recipes/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/recipes").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/api/recipes/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/recipes/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, apiRecipes + apiAllModifier).authenticated()
+                        .requestMatchers(HttpMethod.POST, apiRecipes).authenticated()
+                        .requestMatchers(HttpMethod.PUT, apiRecipes + apiAllModifier).authenticated()
+                        .requestMatchers(HttpMethod.DELETE, apiRecipes + apiAllModifier).authenticated()
                         // otros
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -108,8 +118,8 @@ public class SecurityConfig {
      * @return UserDetailsService el servicio de detalles de usuario personalizado
      */
     @Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService();
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return new CustomUserDetailsService(userRepository);
     }
 
     @Bean
@@ -125,18 +135,18 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
-    
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        
+
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:8080"); // Reemplaza con el dominio del frontend
-        config.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        
+
         return source;
     }
 

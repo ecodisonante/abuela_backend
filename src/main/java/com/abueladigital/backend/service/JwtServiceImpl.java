@@ -12,8 +12,8 @@ import javax.crypto.SecretKey;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    private final int EXPIRATION_TOKEN_HOURS = 1;
-    private final String SECRET_KEY = "Juro solemnemente que mis intenciones no son buenas";
+    private static final int EXPIRATION_TOKEN_HOURS = 1;
+    private static final String SECRET_KEY = "Juro solemnemente que mis intenciones no son buenas";
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = SECRET_KEY.getBytes();
@@ -24,7 +24,7 @@ public class JwtServiceImpl implements JwtService {
     public String generateToken(String username, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
-        
+
         return Jwts.builder()
                 .claims().empty().add(claims).and()
                 .subject(username)
