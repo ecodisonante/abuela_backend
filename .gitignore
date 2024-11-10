@@ -35,3 +35,4 @@ build/
 ### Custom ###
 wallet/
 logs/
+.scannerwork/.sonar_lock

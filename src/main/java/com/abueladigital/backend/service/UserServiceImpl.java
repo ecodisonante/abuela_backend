@@ -13,11 +13,14 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserRepository userRepository;
+    private PasswordEncoder encoder;
 
     @Autowired
-    private PasswordEncoder encoder;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder) {
+        this.userRepository = userRepository;
+        this.encoder = encoder;
+    }
 
     @Override
     public List<User> findAll() {

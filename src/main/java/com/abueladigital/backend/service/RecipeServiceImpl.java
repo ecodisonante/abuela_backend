@@ -14,11 +14,14 @@ import java.util.Optional;
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
-    @Autowired
     private RecipeRepository recipeRepository;
+    private UserService userService;
 
     @Autowired
-    private UserService userService;
+    public RecipeServiceImpl(RecipeRepository recipeRepository, UserService userService) {
+        this.recipeRepository = recipeRepository;
+        this.userService = userService;
+    }
 
     @Override
     public Recipe save(Recipe recipe) {
@@ -28,8 +31,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe update(Recipe recipe) {
-        this.addRecipeReferences(recipe);
-        return recipeRepository.save(recipe);
+        return this.save(recipe);
     }
 
     @Override

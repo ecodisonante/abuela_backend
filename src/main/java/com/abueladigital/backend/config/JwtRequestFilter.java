@@ -23,6 +23,13 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+    private JwtService jwtService;
+
+    @Autowired
+    public JwtRequestFilter(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         // Excluir login de la validación del token
@@ -36,9 +43,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         return ignoredRequests.containsKey(path) && ignoredRequests.get(path).equalsIgnoreCase(method);
     }
-
-    @Autowired
-    private JwtService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
