@@ -13,7 +13,7 @@ RUN mvn clean package
 
 FROM eclipse-temurin:21-jdk 
 
-COPY --from=buildstage /app/target/backend-0.0.2-SNAPSHOT.jar /app/backend.jar
+COPY --from=buildstage /app/target/backend-0.0.3-SNAPSHOT.jar /app/backend.jar
 
 COPY wallet /app/wallet
 
