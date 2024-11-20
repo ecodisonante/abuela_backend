@@ -141,7 +141,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:8080"); // Reemplaza con el dominio del frontend
+        config.addAllowedOrigin("http://localhost:8082");
+        config.addAllowedOrigin("http://frontend:8082");
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
