@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.abueladigital.backend.repository.UserRepository;
@@ -96,7 +95,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(req -> req
                         // acceso publico
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").anonymous()
                         .requestMatchers(HttpMethod.GET, apiRecipes).permitAll()
                         // solo registrados
                         .requestMatchers(HttpMethod.GET, apiRecipes + apiAllModifier).authenticated()
@@ -123,25 +122,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-
-        config.setAllowCredentials(true); // Permitir cookies y credenciales
-        config.addAllowedOrigin("http://localhost:8080"); // Reemplaza con el dominio del frontend
-        config.addAllowedHeader("*"); // Permite todos los encabezados
-        config.addAllowedMethod("*"); // Permite todos los métodos (GET, POST, etc.)
-
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
-
-    @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:8080"); // Reemplaza con el dominio del frontend
+        config.addAllowedOrigin("http://localhost:8082");
+        config.addAllowedOrigin("http://frontend:8082");
+        config.addAllowedOrigin("http://48.211.162.254:8082");
+        config.addAllowedHeader("*");
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
