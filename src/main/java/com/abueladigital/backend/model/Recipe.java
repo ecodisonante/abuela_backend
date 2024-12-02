@@ -48,6 +48,10 @@ public class Recipe {
 
     private LocalDateTime created;
 
+    //relacion con tabla comentario
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentRecipe> comments;
+
     @PrePersist
     protected void onCreate() {
         this.created = LocalDateTime.now();
@@ -65,4 +69,8 @@ public class Recipe {
         this.instructions.add(instruction); // Añadir a la lista de instrucciones
     }
 
+    public void addComment(CommentRecipe comment) {
+        comment.setRecipe(this);
+        this.comments.add(comment);
+    }
 }
