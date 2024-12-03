@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.abueladigital.backend.model.CommentRecipe;
+import com.abueladigital.backend.model.CommentRecipeDTO;
 import com.abueladigital.backend.service.CommentRecipeService;
+import com.abueladigital.backend.service.RecipeService;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +16,14 @@ import java.util.Optional;
 @RequestMapping("/api/comments")
 public class CommentRecipeController {
 
-    @Autowired
     private CommentRecipeService commentRecipeService;
+    private RecipeService recipeService;
+
+    @Autowired
+    public CommentRecipeController(CommentRecipeService commentRecipeService, RecipeService recipeService) {
+        this.commentRecipeService = commentRecipeService;
+        this.recipeService = recipeService;
+    }
 
     @GetMapping
     public ResponseEntity<List<CommentRecipe>> getAllComments() {
@@ -30,9 +38,22 @@ public class CommentRecipeController {
     }
 
     @PostMapping
-    public ResponseEntity<CommentRecipe> createComment(@RequestBody CommentRecipe commentRecipe) {
-        CommentRecipe createdComment = commentRecipeService.postCommentRecipe(commentRecipe);
-        return ResponseEntity.status(201).body(createdComment);
+    public ResponseEntity<CommentRecipe> createComment(@RequestBody CommentRecipeDTO request) {
+        CommentRecipe comment = new CommentRecipe();
+
+        // buscar receta
+        var recipe = recipeService.findById(request.getRecipeId());
+
+        // insertar comentario si receeta existe
+        if (recipe.isPresent()) {
+            comment.setContent(request.getContent());
+            comment.setRecipe(recipe.get());
+            
+            CommentRecipe createdComment = commentRecipeService.postCommentRecipe(comment);
+            return ResponseEntity.status(201).body(createdComment);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
