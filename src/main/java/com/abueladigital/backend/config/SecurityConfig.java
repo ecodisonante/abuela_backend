@@ -40,7 +40,6 @@ public class SecurityConfig {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
-
     /**
      * Proporciona un administrador de autenticación para manejar el proceso de
      * autenticación.
@@ -86,7 +85,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        String apiRecipes = "/api/recipes";
+        String api = "/api";
+        String recipes = "/recipes";
+        String comments = "/comments";
         String apiAllModifier = "/**";
 
         http
@@ -96,13 +97,21 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         // acceso publico
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").anonymous()
-                        .requestMatchers(HttpMethod.GET, apiRecipes).permitAll()
-                        // solo registrados
-                        .requestMatchers(HttpMethod.GET, apiRecipes + apiAllModifier).authenticated()
-                        .requestMatchers(HttpMethod.POST, apiRecipes).authenticated()
-                        .requestMatchers(HttpMethod.PUT, apiRecipes + apiAllModifier).authenticated()
-                        .requestMatchers(HttpMethod.DELETE, apiRecipes + apiAllModifier).authenticated()
-                        // otros
+                        .requestMatchers(HttpMethod.GET, api + recipes).permitAll()
+                        /**
+                         * solo registrados
+                         */
+                        //recetas
+                        .requestMatchers(HttpMethod.GET, api + recipes + apiAllModifier).authenticated()
+                        .requestMatchers(HttpMethod.POST, api + recipes).authenticated()
+                        .requestMatchers(HttpMethod.PUT, api + recipes + apiAllModifier).authenticated()
+                        .requestMatchers(HttpMethod.DELETE, api + recipes + apiAllModifier).authenticated()
+                        //comentarios
+                        .requestMatchers(HttpMethod.GET, api + comments + apiAllModifier).authenticated()
+                        .requestMatchers(HttpMethod.POST, api + comments).authenticated()
+                        .requestMatchers(HttpMethod.PUT, api + comments + apiAllModifier).authenticated()
+                        .requestMatchers(HttpMethod.DELETE, api + comments + apiAllModifier).authenticated()
+                        //otros
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
