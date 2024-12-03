@@ -59,8 +59,19 @@ public class CommentRecipeController {
     @PutMapping("/{id}")
     public ResponseEntity<CommentRecipe> updateComment(
             @PathVariable Long id,
-            @RequestBody CommentRecipe commentRecipe) {
-        CommentRecipe updatedComment = commentRecipeService.putCommentRecipe(id, commentRecipe);
+            @RequestBody CommentRecipeDTO request) {
+
+        // Convertir request a CommentRecipe
+        CommentRecipe comment = new CommentRecipe();
+        var recipe = recipeService.findById(request.getRecipeId());
+        if (recipe.isPresent()) {
+            comment.setContent(request.getContent());
+            comment.setRecipe(recipe.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+        CommentRecipe updatedComment = commentRecipeService.putCommentRecipe(id, comment);
         if (updatedComment != null) {
             return ResponseEntity.ok(updatedComment);
         } else {
