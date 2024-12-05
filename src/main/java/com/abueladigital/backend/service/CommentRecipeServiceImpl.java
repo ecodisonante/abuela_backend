@@ -14,8 +14,12 @@ import com.abueladigital.backend.repository.CommentRecipeRepository;
 @Service
 public class CommentRecipeServiceImpl implements CommentRecipeService{
 
-    @Autowired
     private CommentRecipeRepository commentRecipeRepository;
+    
+    @Autowired
+    public CommentRecipeServiceImpl(CommentRecipeRepository commentRecipeRepository) {
+        this.commentRecipeRepository = commentRecipeRepository;
+    }
 
     @Override
     public List<CommentRecipe> getAllCommentRecipe() {
@@ -28,18 +32,18 @@ public class CommentRecipeServiceImpl implements CommentRecipeService{
     }
     
     @Override
-    public CommentRecipe postCommentRecipe(CommentRecipe CommentRecipe)
+    public CommentRecipe postCommentRecipe(CommentRecipe commentRecipe)
     {
-        return commentRecipeRepository.save(CommentRecipe);
+        return commentRecipeRepository.save(commentRecipe);
     }
 
     @Override
-    public CommentRecipe putCommentRecipe( Long id, CommentRecipe CommentRecipe)
+    public CommentRecipe putCommentRecipe( Long id, CommentRecipe commentRecipe)
     {
         if(commentRecipeRepository.existsById(id))
         {
-            CommentRecipe.setId(id);
-            return commentRecipeRepository.save(CommentRecipe);
+            commentRecipe.setId(id);
+            return commentRecipeRepository.save(commentRecipe);
         }
         else{
             return null;
