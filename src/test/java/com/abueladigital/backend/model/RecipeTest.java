@@ -61,4 +61,18 @@ class RecipeTest {
         assertEquals(recipe, instruction.getRecipe());
     }
 
+    @Test
+    void shouldAddCommentToRecipe() {
+        // arrange
+        var comment = new CommentRecipe();
+        comment.setContent("Comentario Nuevo");
+        recipe.setComments(new ArrayList<>());
+
+        // act
+        recipe.addComment(comment);
+
+        // assert
+        assertEquals(1, recipe.getComments().size());
+        assertEquals(recipe, comment.getRecipe());
+    }
 }
